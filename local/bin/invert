@@ -1,0 +1,11 @@
+#! /bin/bash
+
+re="(.*)<inverted>$"
+ID=$(xdotool getactivewindow)
+NAME=$(xdotool getwindowname $ID)
+
+if  [[ $NAME =~ $re ]]; then
+    xdotool set_window --name "${BASH_REMATCH[1]}" $ID
+else
+    xdotool set_window --name "$NAME <inverted>" $ID
+fi

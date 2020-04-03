@@ -1,0 +1,11 @@
+[user]
+	name = Juan Manuel Tomás
+	email = jtomas1815@gmail.com
+[alias]
+	unstage = reset HEAD --
+	l = log --decorate --oneline
+[merge]
+	tool = vimdiff
+	conflictstyle = diff3
+[mergetool]
+	prompt = false

@@ -1,0 +1,456 @@
+##                 _               __                 __ 
+##   ___ ___ _  __(_)______  ___  / /___ _  ___ ___  / /_
+##  / -_) _ \ |/ / / __/ _ \/ _ \/ __/  ' \/ -_) _ \/ __/
+##  \__/_//_/___/_/_/  \___/_//_/\__/_/_/_/\__/_//_/\__/ 
+##                                                     
+
+## Set The Scripts directory
+SetEnv scripts $[HOME]/.fvwm/scripts
+
+## Where The Titlebar Icons Are Stored
+SetEnv icons $[HOME]/.fvwm/icons
+
+## terminal emulator
+SetEnv terminal "xfce4-terminal"
+## text editor
+SetEnv editor "emacsclient -c"
+
+
+##     ___              __  _             
+##    / _/_ _____  ____/ /_(_)__  ___  ___
+##   / _/ // / _ \/ __/ __/ / _ \/ _ \(_-<
+##  /_/ \_,_/_//_/\__/\__/_/\___/_//_/___/
+##
+                                         
+## Autostart
+# Start or restart
+DestroyFunc StartFunction
+AddToFunc   StartFunction
++ I Exec feh --bg-fill /usr/share/backgrounds/manjaro-wallpapers-18.0/illyria-default-lockscreen-nobrand.jpg
++ I Exec setxkbmap -layout "latam" -model "pc105"
++ I Exec setxkbmap -option "altwin:alt_super_win"
++ I Exec xrdb $[HOME]/.Xresources
++ I Exec xmodmap $[HOME]/.Xmodmap
++ I Exec xset s off -dpms r rate 500 30
+# Only execute once
+DestroyFunc InitFunction
+AddToFunc InitFunction
++ I Exec emacs --daemon &
++ I Exec compton &
++ I Exec lxsession &
+
+## To Toggle The Titlebar
+DestroyFunc ToggleTitle
+AddToFunc   ToggleTitle
++ I ThisWindow (State 1) WindowStyle Title
++ I TestRc (Match) State 1 False
++ I TestRc (Match) Break
++ I WindowStyle !Title
++ I State 1 True
+
+## Resize from bottom right
+DestroyFunc ResizeC
+AddToFunc ResizeC
++ I WarpToWindow 100 100
++ I Resize
+
+## Window Snapping
+# Snap left
+DestroyFunc SnapLeft
+AddToFunc SnapLeft
++ I Move 0 0
++ I Maximize True 50 100
++ I Raise
+# Snap right
+DestroyFunc SnapRight
+AddToFunc SnapRight
++ I Maximize True 50 100
++ I Move -0 0
++ I Raise
+# Zoom unmaximize large
+DestroyFunc SnapHalf
+AddToFunc SnapHalf
++ I Maximize True 75 75
++ I Move 50-50w 50-50w
++ I Raise
+# Zoom unmaximize small
+DestroyFunc SnapQuarter
+AddToFunc SnapQuarter
++ I Maximize True 50 50
++ I Move 50-50w 50-50w
++ I Raise
+
+## Raising Window
+DestroyFunc RaiseMoveX
+AddToFunc RaiseMoveX
++ I Raise
++ M $0
++ D $1
+DestroyFunc RaiseMove
+AddToFunc RaiseMove
++ I Raise
++ M $0
+
+
+##     __            __   _         __  
+##    / /_____ __ __/ /  (_)__  ___/ /__
+##   /  '_/ -_) // / _ \/ / _ \/ _  (_-<
+##  /_/\_\\__/\_, /_.__/_/_//_/\_,_/___/
+##           /___/                      
+
+## Common Keybinds
+# Ignore Numlock and other modifiers for bindings
+IgnoreModifiers L25
+# Launching apps
+Key space A 4 Menu MenuFvwmRoot
+Key Print A A Exec $[scripts]/screeny
+Key Return A 4 Exec exec $[terminal]
+Key BackSpace A 4 Exec exec $[editor]
+# Volume control
+Key Right A 4 Exec amixer -q set Master 5%+
+Key Left A 4 Exec amixer -q set Master 5%-
+Key Up A 4 Exec amixer set Master unmute
+Key Down A 4 Exec amixer set Master mute
+# Check time and date
+Key i A 4 Exec notify-send "$(LANG=en_US.utf8 LC_TIME=en_US.utf8 date +'%H:%M')" \
+"$(LANG=en_US.utf8 LC_TIME=en_US.utf8 date +'%A %-d %B %Y')"
+
+## Workspace & window Bindings
+# Close, maximize, and minimize
+Key c WT 4 Close
+Key f WT 4 Maximize
+Key t WT 4 Iconify
+# Super + 1-4 to switch workspace
+Key 1 A 4 GotoPage 0 0
+Key 2 A 4 GotoPage 1 0
+Key 3 A 4 GotoPage 0 1
+Key 4 A 4 GotoPage 1 1
+# Super + Shift + 1-4 to send to another workspace
+Key 1 A 4S MovetoPage 0 0
+Key 2 A 4S MovetoPage 1 0
+Key 3 A 4S MovetoPage 0 1
+Key 4 A 4S MovetoPage 1 1
+# Window snapping
+Key l A 4 SnapLeft
+Key r A 4 SnapRight
+Key h A 4 SnapHalf
+Key q A 4 SnapQuarter
+# Move to the edge of the screen
+Key Left A C4 Move 0 w+0
+Key Right A C4 Move -0 w+0
+Key Up A C4 Move w+0 0
+Key Down A C4 Move w+0 -0
+# Move to the center of the screen
+Key a A 4 Move 50-50w 50-50w
+# Map alt tab to mod tab
+Key Tab A M nop
+Key Tab A 4 WindowList Root c c NoDeskSort
+
+
+##                             __   _         __  
+##    __ _  ___  __ _____ ___ / /  (_)__  ___/ /__
+##   /  ' \/ _ \/ // (_-</ -_) _ \/ / _ \/ _  (_-<
+##  /_/_/_/\___/\_,_/___/\__/_.__/_/_//_/\_,_/___/
+##                                              
+
+## Double Click Delay
+ClickTime 250
+MoveThreshold 3
+
+## Focus on Hover Instead of ClickToFocus
+Style * SloppyFocus, MouseFocusClickRaises
+
+## Move and resize freely using mouse
+Mouse 1 A 4 RaiseMove Move
+Mouse 3 A 4 RaiseMove ResizeC
+
+## Titlebar Buttons
+Mouse 1 1 A Menu MenuWindowOps Delete
+Mouse 1 2 A Close
+Mouse 1 4 A Maximize
+Mouse 1 6 A Iconify
+
+## Titlebar Itself
+Mouse 1	T A RaiseMoveX Move Maximize
+Mouse 1	FS A RaiseMove Resize
+Mouse 4	T A WindowShade True
+Mouse 5	T A WindowShade False
+Mouse 3	T A Menu MenuWindowOps
+
+## Rootmenu on The Desktop
+Mouse 1	R A Menu MenuFvwmRoot
+Mouse 2	R A WindowList
+Mouse 3	R A Menu MenuWindowOpsLong
+
+## On minimized windows
+Mouse 1 I A Iconify off
+Mouse 3 I A Menu MenuIconOps
+
+
+##
+##    __ _  ___ ___  __ _____
+##   /  ' \/ -_) _ \/ // (_-<
+##  /_/_/_/\__/_//_/\_,_/___/
+##
+      
+## Menu Styling                   
+MenuStyle * MenuColorset 5, ActiveColorset 6, GreyedColorset 7, TitleColorset 8
+MenuStyle * Hilight3DOff, HilightBack, HilightTitleBack, SeparatorsLong
+MenuStyle * TrianglesSolid, TrianglesUseFore
+MenuStyle * ItemFormat "%|%4.2i%5.3l%5.3>%|"
+MenuStyle * Font "xft:Sans:Regular:size=8:antialias=True"
+
+## Root Menu on The Desktop
+DestroyMenu MenuFvwmRoot
+AddToMenu   MenuFvwmRoot "Quick Menu" Title
++ "&Terminal" Exec exec $[terminal]
++ "&Programs" Popup MenuPrograms
++ "" Nop
++ "Re&fresh" Refresh
++ "&Restart" Restart
++ "&Quit" Module FvwmScript FvwmScript-ConfirmQuit
++ "" Nop
+
+## Root Menu >> Programs
+DestroyMenu MenuPrograms
+AddToMenu   MenuPrograms "Programs" Title
+Test (x emacs) + "Emacs" Exec exec $[editor]
+Test (x thunar) + "File Manager" Exec exec thunar
+Test (x firefox) + "Web Browser" Exec exec firefox
+Test (x libreoffice) + "Libreoffice" Exec exec libreoffice
+Test (x xfburn) + "Xfburn" Exec exec xfburn
+Test (x geogebra) + "Geogebra" Exec exec geogebra
+Test (x audacity) + "Audacity" Exec exec audacity
+Test (x mypaint) + "MyPaint" Exec exec mypaint
+Test (x gimp) + "Gimp" Exec exec gimp
+Test (x blender) + "Blender" Exec exec blender
+Test (x dia) + "Dia" Exec exec dia
+Test (x inkscape) + "Inkscape" Exec exec inkscape
+
+## Titlebar Right Click
+DestroyMenu MenuWindowOps
+AddToMenu   MenuWindowOps
++ "Send To" Popup MenuSendTo
++ "Move" Move
++ "Resize" Resize
++ "Iconify" Iconify
++ "Maximize" Maximize
++ "Shade" WindowShade
++ "Stick" Stick
++ "" Nop
++ "Close" Close
++ "More..." Menu MenuWindowOpsLong This 0 0
+
+## Titlebar Right Click >> More
+DestroyMenu MenuWindowOpsLong
+AddToMenu   MenuWindowOpsLong
++ "Send To" Popup MenuSendTo
++ "Move" Move
++ "Resize" Resize
++ "(De)Iconify" Iconify
++ "(Un)Maximize" Maximize
++ "(Un)Shade" WindowShade
++ "(Un)Sticky" Stick
++ "(No)TitleBar" Pick (CirculateHit) ToggleTitle
++ "" Nop
++ "Close" Close
++ "Destroy" Destroy
++ "" Nop
++ "Raise" Raise
++ "Lower" Lower
++ "" Nop
++ "StaysOnTop" Pick (CirculateHit) Layer 0 6
++ "StaysPut" Pick (CirculateHit) Layer 0 4
++ "StaysOnBottom" Pick (CirculateHit) Layer 0 2
++ "" Nop
++ "Identify" Module FvwmIdent
+
+## Right Click on Minimized Window
+DestroyMenu MenuIconOps
+AddToMenu   MenuIconOps
++ "(De)Iconify" Iconify
++ "(Un)Maximize" Maximize
++ "(Un)Shade" WindowShade
++ "(Un)Sticky" Stick
++ "(No)TitleBar" Pick (CirculateHit) ToggleTitle
++ "" Nop
++ "Close" Close
++ "Destroy" Destroy
++ "" Nop
++ "Raise" Raise
++ "Lower" Lower
++ "" Nop
++ "StaysOnTop" Pick (CirculateHit) Layer 0 6
++ "StaysPut" Pick (CirculateHit) Layer 0 4
++ "StaysOnBottom" Pick (CirculateHit) Layer 0 2
++ "" Nop
++ "Identify" Module FvwmIdent
+
+## Titlebar Right Click >> Send To
+DestroyMenu MenuSendTo
+AddToMenu MenuSendTo
++ " Workspace 1 " MoveToPage 0 0
++ " Workspace 2 " MoveToPage 1 0
++ " Workspace 3 " MoveToPage 2 0
++ " Workspace 4 " MoveToPage 3 0
+
+
+##             __                 __ 
+##   _______  / /__  _______ ___ / /_
+##  / __/ _ \/ / _ \/ __(_-</ -_) __/
+##  \__/\___/_/\___/_/ /___/\__/\__/     
+##                   
+
+## Common Colorset
+# Default
+Colorset 0 fg #a1a8b9, bg #131c26, hi, sh, Plain, NoShape
+# Inactive windows
+Colorset 1 fg #7cada4, bg #7cada4, hi, sh, Plain, NoShape
+# Active windows
+Colorset 2 fg #12967e, bg #12967e, hi, sh, Plain, NoShape
+# Inactive windows borders
+Colorset 3 fg #7cada4, bg #7cada4, hi #7cada4, sh #7cada4, Plain, NoShape
+# Active windows borders
+Colorset 4 fg #12967e, bg #12967e, hi #12967e, sh #12967e, Plain, NoShape
+# Menu inactive item
+Colorset 5 fg #4f5159, bg #ffffff, hi #ffffff, sh #ffffff, Plain, NoShape
+# Menu active item
+Colorset 6 fg #12967e, bg #ffffff, hi #ffffff, sh #ffffff, Plain, NoShape
+# Menu grayed item
+Colorset 7 fg #7a7a7a, bg #ffffff, hi #ffffff, sh #ffffff, Plain, NoShape
+# Menu title
+Colorset 8 fg #131c26, bg #ffffff, hi #ffffff, sh #ffffff, Plain, NoShape
+# Reserved
+Colorset 10 fg #a1a8b9, bg #131c26, hi #131c26, sh #131c26, Plain, NoShape
+# Module default
+Colorset 10 fg #a1a8b9, bg #131c26, hi #131c26, sh #131c26, Plain, NoShape
+# Module highlight
+Colorset 11 fg #725f8f, bg #131c26, hi #131c26, sh #131c26, Plain, NoShape
+# Module active buttons (mouse hover)
+Colorset 12 fg #c6586f, bg #131c26, hi, sh, Plain, NoShape
+# Pager active page
+Colorset 13 fg #131c26, bg #1b2736, hi, sh, Plain, NoShape
+# Iconified buttons
+Colorset 14 fg #a1a8b9, bg #131c26, hi #131c26, sh #131c26, Plain, NoShape
+
+
+
+##         __       ___          
+##    ___ / /___ __/ (_)__  ___ _
+##   (_-</ __/ // / / / _ \/ _ `/
+##  /___/\__/\_, /_/_/_//_/\_, / 
+##          /___/         /___/  
+
+## Default Font
+DefaultFont "xft:Sans:Regular:size=8:antialias=True"
+
+## Place It On Center instead of MinOverlapPlacement
+Style * PositionPlacement Center
+Style * GrabFocusOff, !UsePPosition
+
+## Transient Windows, Such as Open File Windows
+Style * DecorateTransient, StackTransientParent
+Style * !FPGrabFocusTransient, FPReleaseFocusTransient
+
+## Window Shade / Roll Up
+Style * WindowShadeScrolls, WindowShadeSteps 10
+
+## Enable Icons on Desktop
+Style * Icon
+
+## Decoration Styles
+Style * TitleAtLeft
+Style * ResizeHintOverride
+Style * BorderWidth 0, HandleWidth 0
+Style * Colorset 1, HilightColorset 2
+Style * BorderColorset 3, HilightBorderColorset 4
+
+## Window Specific Styles
+Style ConfirmQuit !Title, PositionPlacement Center, WindowListSkip, Layer 6
+Style FvwmIdent WindowListSkip
+
+##       __                      __  _         
+##   ___/ /__ _______  _______ _/ /_(_)__  ___ 
+##  / _  / -_) __/ _ \/ __/ _ `/ __/ / _ \/ _ \
+##  \_,_/\__/\__/\___/_/  \_,_/\__/_/\___/_//_/
+##
+                                      
+# Buttons Locations 1 3 5 7 9 T T T T T 0 8 6 4 2
+# 2 >> Close, 4 >> Maximize, 6 >> Minimize, 1 >> Window Menu
+TitleStyle Centered Height 28 -- Flat
+ButtonStyle Reset
+ButtonStyle All -- Flat
+ButtonStyle All -- UseTitleStyle
+AddButtonStyle All Vector 2 1x1@4 1x1@4
+AddButtonStyle 2 \
+	ActiveUp (Pixmap $[icons]/close_i.png -- Flat) \
+	ActiveDown (Pixmap $[icons]/close_i.png -- Flat) \
+	Inactive (Pixmap $[icons]/close.png -- Flat)
+AddButtonStyle 4 \
+	ActiveUp (Pixmap $[icons]/maximize_i.png -- Flat) \
+	ActiveDown (Pixmap $[icons]/maximize_i.png -- Flat) \
+	Inactive (Pixmap $[icons]/maximize.png -- Flat)
+AddButtonStyle 6 \
+	ActiveUp (Pixmap $[icons]/iconify_i.png -- Flat) \
+	ActiveDown (Pixmap $[icons]/iconify_i.png -- Flat) \
+	Inactive (Pixmap $[icons]/iconify.png -- Flat)
+AddButtonStyle 1 \
+	ActiveUp (Pixmap $[icons]/options_i.png -- Flat) \
+	ActiveDown (Pixmap $[icons]/options_i.png -- Flat) \
+	Inactive (Pixmap $[icons]/options.png -- Flat)
+
+
+##                   __     __      
+##    __ _  ___  ___/ /_ __/ /__ ___
+##   /  ' \/ _ \/ _  / // / / -_|_-<
+##  /_/_/_/\___/\_,_/\_,_/_/\__/___/
+                                
+## FvwmIdent
+# To get various window info
+# Used in Titlebar Right Click >> More >> Identify
+DestroyModuleConfig FvwmIdent:*
+*FvwmIdent: Colorset 10
+*FvwmIdent: Font "xft:Sans:Regular:size=8:antialias=True"
+
+## FvwmScript
+# To create desktop widget like date time & quit popup menu
+# Only used for quit popup menu this time
+DestroyModuleConfig FvwmScript:*
+*FvwmScript: DefaultColorset 10
+
+##     ___  ___ ____ ____ ____
+##    / _ \/ _ `/ _ `/ -_) __/
+##   / .__/\_,_/\_, /\__/_/   
+##  /_/        /___/          
+##
+
+## Workspace
+DesktopSize 2x2
+EdgeScroll 0 0
+EdgeResistance 0
+EdgeThickness 0
+Style * EdgeMoveDelay 350
+Style * EdgeMoveResistance 350
+EwmhBaseStruts 12 12 12 12
+
+## Workspace Indicator
+DestroyModuleConfig FvwmPager: *
+AddToFunc StartFunction
++ I Module FvwmPager
+*FvwmPager: font none
+*FvwmPager: Rows 1
+*FvwmPager: Columns 1
+*FvwmPager: Back #131c26
+*FvwmPager: WindowColorsets 1 2
+*FvwmPager: Geometry 128x72-12-12
+Style FvwmPager !Title, !Borders, Sticky, FixedPosition, FixedSize
+
+## Minimize to Icon Placeholder
+Style * IconBox 400x768+12+12, IconGrid 15 15, \
+IconFill top left, !IconTitle, IconBackgroundRelief 0
+
+
+
+
+
+

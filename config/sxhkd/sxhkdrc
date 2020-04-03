@@ -1,0 +1,14 @@
+super Return
+	xterm
+
+alt F4
+	bspc node -c
+
+super k
+	bspc node -f next
+
+alt Tab
+	bspc node -f next
+
+super j
+	bspc node -f prev

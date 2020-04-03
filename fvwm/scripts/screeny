@@ -1,0 +1,4 @@
+#!/bin/bash
+
+name=$(date '+%F_%T')
+maim "$HOME/Pictures/$name"

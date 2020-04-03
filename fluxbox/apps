@@ -1,0 +1,41 @@
+[app] (name=fbrun)
+  [Position]	(CENTER)	{0 0}
+  [Layer]	{2}
+[end]
+[app] (name=gl) (class=mpv)
+  [Maximized]	{yes}
+[end]
+[app] (name=xterm) (class=XTerm)
+[end]
+[app] (name=emacs) (class=Emacs)
+[end]
+[app] (name=chromium) (class=Chromium) (role=browser)
+  [Maximized]	{no}
+[end]
+[app] (name=mupdf) (class=MuPDF)
+[end]
+[app] (name=dia) (class=Dia) (role=dia-main-window)
+  [Maximized]	{yes}
+[end]
+[app] (name=ardour_ardour) (class=Ardour)
+  [Maximized]	{yes}
+[end]
+[app] (name=rosegarden) (class=Rosegarden)
+[end]
+[app] (name=atril) (class=Atril)
+  [Maximized]	{yes}
+[end]
+[app] (name=pavucontrol) (class=Pavucontrol)
+  [Maximized]	{yes}
+[end]
+[app] (name=discord) (class=discord) (role=browser-window)
+  [Maximized]	{yes}
+[end]
+[app] (name=Navigator) (class=Firefox-esr) (role=browser)
+[end]
+[app] (name=caja) (class=Caja)
+  [Dimensions]	{49% 67%}
+[end]
+[transient] (name=firefox-esr) (class=Firefox-esr) (role=GtkFileChooserDialog)
+  [Dimensions]	{68% 94%}
+[end]
