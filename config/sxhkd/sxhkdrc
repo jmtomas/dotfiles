@@ -1,5 +1,5 @@
 super Return
-	xterm
+	st
 
 alt F4
 	bspc node -c
