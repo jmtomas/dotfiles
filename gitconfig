@@ -4,6 +4,7 @@
 [alias]
 	unstage = reset HEAD --
 	l = log --decorate --oneline
+	ll = log --decorate --graph
 [merge]
 	tool = vimdiff
 	conflictstyle = diff3
