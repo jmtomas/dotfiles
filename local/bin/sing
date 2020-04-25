@@ -1,0 +1,10 @@
+#!/bin/python
+
+import os
+
+pathnames = os.popen("find $HOME/music/ -type f").read().split("\n")
+pathnames.pop()
+filenames = [i.split("/")[-1] for i in pathnames]
+selected = os.popen("echo \"%s\" | dmenu -p \"What do I sing?\" -l 20" % "\n".join(filenames)).read()
+if selected:
+    os.system("(mpv \"%s\" &>/dev/null &)" % pathnames[filenames.index(selected.strip())]);
